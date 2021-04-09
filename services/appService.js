@@ -1,18 +1,47 @@
 const { nanoid } = require("nanoid");
-class AppService {
-	static async shortenURL(url) {
-		if (!AppService.validateURL(url)) throw new Error("Invalid URL");
 
-		const shortId = nanoid(6);
+const Link = require("../models/link");
+class AppService {
+	static async shortenURL(originalUrl, req) {
+		if (!AppService.validateURL(originalUrl)) throw new Error("Invalid URL");
+
+		const shortid = nanoid(6);
+		const domain = req.protocol + "://" + req.get("host");
+
+		const shortUrl = `${domain}/${shortid}`;
+
+		await AppService.saveLink(originalUrl, shortid);
+
 		return {
-			url,
-			host: "some host",
-			path: shortId,
+			shortUrl,
+			host: domain,
+			path: shortid,
 		};
 	}
 
-	static async getFullUrl(shortUrl) {
-		return "https://twitch.tv/aceu";
+	static async saveLink(originalUrl, shortid) {
+		const exists = await Link.findOne({
+			where: {
+				shortid,
+			},
+		});
+		if (exists) throw new Error("Short Id already exists");
+
+		await Link.create({
+			originalUrl,
+			shortid,
+		});
+	}
+
+	static async getOriginalUrl(shortUrl) {
+		const path = shortUrl.split("/")[1];
+		const link = await Link.findOne({
+			where: {
+				shortid: path,
+			},
+		});
+		if (!link) throw new Error("Page not found");
+		return link.originalUrl;
 	}
 
 	static validateURL(url) {

@@ -19,13 +19,17 @@ app.use(
 	"/graphiql",
 	expressGraphQL({
 		schema: schema,
-		graphiql: true,
+		graphiql: process.env.NODE_ENV === "development",
 	})
 );
 
 app.use(async (req, res, next) => {
-	const fullUrl = await AppService.getFullUrl(req.url);
-	res.redirect(fullUrl);
+	try {
+		const originalUrl = await AppService.getOriginalUrl(req.url);
+		res.redirect(originalUrl);
+	} catch (error) {
+		res.send({ message: error.message });
+	}
 });
 
 app.listen(port, () => {

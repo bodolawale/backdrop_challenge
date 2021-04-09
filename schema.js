@@ -10,7 +10,7 @@ const AppService = require("./services/appService");
 const DataType = new GraphQLObjectType({
 	name: "Data",
 	fields: () => ({
-		url: { type: GraphQLString },
+		shortUrl: { type: GraphQLString },
 		host: { type: GraphQLString },
 		path: { type: GraphQLString },
 	}),
@@ -24,8 +24,8 @@ const RootQuery = new GraphQLObjectType({
 			args: {
 				shortenURL: { type: new GraphQLNonNull(GraphQLString) },
 			},
-			resolve(parent, args) {
-				return AppService.shortenURL(args.shortenURL);
+			resolve(parent, args, content) {
+				return AppService.shortenURL(args.shortenURL, content);
 			},
 		},
 	},
