@@ -1,7 +1,15 @@
 const express = require("express");
 const expressGraphQL = require("express-graphql").graphqlHTTP;
+const dotenv = require("dotenv");
+
+const nodeEnv = process.env.NODE_ENV || "development";
+if (nodeEnv === "development" || nodeEnv === "test") {
+	dotenv.config({ path: `./config/${nodeEnv}.env` });
+}
+
 const schema = require("./schema");
 const AppService = require("./services/appService");
+require("./db");
 
 const app = express();
 
