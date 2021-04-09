@@ -11,6 +11,10 @@ class AppService {
 		};
 	}
 
+	static async getFullUrl(shortUrl) {
+		return "https://twitch.tv/aceu";
+	}
+
 	static validateURL(url) {
 		try {
 			new URL(url);
