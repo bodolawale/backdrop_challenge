@@ -1,5 +1,5 @@
 class AppService {
-	static async shortenUrl(url) {
+	static async shortenURL(url) {
 		return {
 			url,
 			host: "some host",

@@ -1,4 +1,9 @@
-const { GraphQLSchema, GraphQLString, GraphQLObjectType } = require("graphql");
+const {
+	GraphQLSchema,
+	GraphQLString,
+	GraphQLObjectType,
+	GraphQLNonNull,
+} = require("graphql");
 
 const AppService = require("./services/appService");
 
@@ -17,7 +22,7 @@ const RootQuery = new GraphQLObjectType({
 		data: {
 			type: DataType,
 			args: {
-				shortenURL: { type: GraphQLString },
+				shortenURL: { type: new GraphQLNonNull(GraphQLString) },
 			},
 			resolve(parent, args) {
 				return AppService.shortenURL(args.shortenURL);
