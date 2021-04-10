@@ -5,7 +5,7 @@ class AppService {
 	static async shortenURL(originalUrl, req) {
 		if (!AppService.validateURL(originalUrl)) throw new Error("Invalid URL");
 
-		const shortid = this.getUniquePath();
+		const shortid = await this.getUniquePath();
 
 		const domain = req.protocol + "://" + req.get("host");
 		const shortUrl = `${domain}/${shortid}`;
