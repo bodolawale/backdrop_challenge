@@ -19,7 +19,7 @@ app.use(
 	"/graphiql",
 	expressGraphQL({
 		schema: schema,
-		graphiql: process.env.NODE_ENV === "development",
+		graphiql: process.env.NODE_ENV !== "production",
 	})
 );
 
