@@ -5,12 +5,15 @@ class AppService {
 	static async shortenURL(originalUrl, req) {
 		if (!AppService.validateURL(originalUrl)) throw new Error("Invalid URL");
 
-		const shortid = nanoid(6);
-		const domain = req.protocol + "://" + req.get("host");
+		const shortid = this.getUniquePath();
 
+		const domain = req.protocol + "://" + req.get("host");
 		const shortUrl = `${domain}/${shortid}`;
 
-		await AppService.saveLink(originalUrl, shortid);
+		await await Link.create({
+			originalUrl,
+			shortid,
+		});
 
 		return {
 			shortUrl,
@@ -19,18 +22,24 @@ class AppService {
 		};
 	}
 
-	static async saveLink(originalUrl, shortid) {
-		const exists = await Link.findOne({
-			where: {
-				shortid,
-			},
-		});
-		if (exists) throw new Error("Short Id already exists");
+	static async getUniquePath() {
+		let shortid = nanoid(6);
+		let exists = null;
+		// Making sure the shortid is not already in the database.
+		for (let i = 0; i < 3; i++) {
+			exists = await Link.findOne({
+				where: {
+					shortid,
+				},
+			});
+			if (!exists) return;
+			shortid = nanoid(6);
+		}
+		// This most likely won't happen given the scope of the project.
+		if (exists)
+			throw new Error("Could not generate a unique id. Try again later");
 
-		await Link.create({
-			originalUrl,
-			shortid,
-		});
+		return shortid;
 	}
 
 	static async getOriginalUrl(shortUrl) {
