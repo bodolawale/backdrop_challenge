@@ -24,7 +24,8 @@ app.use(
 app.use(async (req, res, next) => {
 	try {
 		const originalUrl = await AppService.getOriginalUrl(req.url);
-		res.redirect(originalUrl);
+		const path = originalUrl.split("/")[1];
+		res.redirect(path);
 	} catch (error) {
 		res.send({ message: error.message });
 	}

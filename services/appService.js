@@ -10,7 +10,7 @@ class AppService {
 		const domain = req.protocol + "://" + req.get("host");
 		const shortUrl = `${domain}/${shortid}`;
 
-		await await Link.create({
+		await Link.create({
 			originalUrl,
 			shortid,
 		});
@@ -42,11 +42,13 @@ class AppService {
 		return shortid;
 	}
 
-	static async getOriginalUrl(shortUrl) {
-		const path = shortUrl.split("/")[1];
+	static async getOriginalUrl(shortid) {
+		// simple validation check
+		if (shortid.length !== 6) throw new Error("Page not found");
+
 		const link = await Link.findOne({
 			where: {
-				shortid: path,
+				shortid,
 			},
 		});
 		if (!link) throw new Error("Page not found");
