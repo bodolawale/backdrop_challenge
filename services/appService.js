@@ -32,7 +32,7 @@ class AppService {
 					shortid,
 				},
 			});
-			if (!exists) return;
+			if (!exists) return shortid;
 			shortid = nanoid(6);
 		}
 		// This most likely won't happen given the scope of the project.
