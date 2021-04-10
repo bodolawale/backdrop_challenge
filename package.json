@@ -2,11 +2,11 @@
   "name": "backdrop_challenge",
   "version": "1.0.0",
   "description": "backdrop coding challenge",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js",
-    "start": "node index.js"
+    "test": "SET NODE_ENV=test&& mocha './tests/**/*.js'",
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
   "author": "Isaac Olawale",
   "license": "ISC",
@@ -15,6 +15,7 @@
     "express": "4.17.1",
     "express-graphql": "0.12.0",
     "graphql": "15.5.0",
+    "mocha": "8.3.2",
     "nanoid": "3.1.22",
     "pg": "8.5.1",
     "pg-hstore": "2.3.3",
