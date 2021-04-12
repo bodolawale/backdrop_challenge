@@ -1,11 +1,15 @@
+const { nanoid } = require("nanoid");
 const {
 	GraphQLSchema,
 	GraphQLString,
 	GraphQLObjectType,
 	GraphQLNonNull,
 } = require("graphql");
-
+const LinkRepository = require("./repository/linkRepository");
 const AppService = require("./services/appService");
+
+const linkRepository = new LinkRepository();
+const appService = new AppService(linkRepository, nanoid);
 
 const DataType = new GraphQLObjectType({
 	name: "Data",
@@ -25,7 +29,7 @@ const RootQuery = new GraphQLObjectType({
 				shortenURL: { type: new GraphQLNonNull(GraphQLString) },
 			},
 			resolve(parent, args, content) {
-				return AppService.shortenURL(args.shortenURL, content);
+				return appService.shortenURL(args.shortenURL, content);
 			},
 		},
 	},
