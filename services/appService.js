@@ -5,12 +5,11 @@ class AppService {
 		this.nanoid = nanoid;
 	}
 
-	async shortenURL(originalUrl, req) {
+	async shortenURL(originalUrl, domain) {
 		if (!this.validateURL(originalUrl)) throw new Error("Invalid URL");
 
 		const shortid = await this.getUniquePath();
 
-		const domain = req.protocol + "://" + req.get("host");
 		const shortUrl = `${domain}/${shortid}`;
 
 		await this.linkRepository.create(originalUrl, shortid);

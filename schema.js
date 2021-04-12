@@ -29,7 +29,8 @@ const RootQuery = new GraphQLObjectType({
 				shortenURL: { type: new GraphQLNonNull(GraphQLString) },
 			},
 			resolve(parent, args, content) {
-				return appService.shortenURL(args.shortenURL, content);
+				const domain = content.protocol + "://" + content.get("host");
+				return appService.shortenURL(args.shortenURL, domain);
 			},
 		},
 	},

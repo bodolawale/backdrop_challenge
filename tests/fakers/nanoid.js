@@ -1,5 +1,6 @@
+const { nanoid: nano } = require("nanoid");
 function nanoid(size) {
-	return "qwerty";
+	return nano(size);
 }
 
 module.exports = nanoid;

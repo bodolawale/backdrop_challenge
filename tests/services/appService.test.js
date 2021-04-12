@@ -26,20 +26,22 @@ describe("AppService", () => {
 			assert.strictEqual("string", typeof response);
 		});
 
-		it("shortId should be of length 6", async () => {
+		it("should confirm shortid is be of length 6", async () => {
 			const response = await appService.getUniquePath();
 			assert.strictEqual(6, response.length);
 		});
+
+		it("should throw error, couldn't generate unique id", async () => {});
 	});
 
 	describe("getOriginalUrl", () => {
-		it("throw error, page not found", async () => {
+		it("should throw error, page not found", async () => {
 			const shortid = "a-long-invalid-url";
 			await appService.getOriginalUrl(shortid).catch((err) => {
 				assert.strictEqual("Page not found", err.message);
 			});
 		});
-		it("throw error, page not found", async () => {
+		it("should throw error, page not found", async () => {
 			const shortid = "abcdef";
 			await appService.getOriginalUrl(shortid).catch((err) => {
 				assert.strictEqual("Page not found", err.message);
@@ -57,6 +59,17 @@ describe("AppService", () => {
 			);
 			const response = await appService.getOriginalUrl(data.shortid);
 			assert.strictEqual(fakeData.originalUrl, response);
+		});
+	});
+
+	describe("shortenURL", () => {
+		it("should return shortened data", async () => {
+			const originalUrl = "https://www.example.com";
+			const domain = "https://www.app-testing.com";
+			const res = await appService.shortenURL(originalUrl, domain);
+			assert.strictEqual(res.host, domain);
+			assert.strictEqual(typeof res.shortUrl, "string");
+			assert.strictEqual(typeof res.path, "string");
 		});
 	});
 });
