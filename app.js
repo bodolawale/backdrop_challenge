@@ -10,6 +10,7 @@ if (nodeEnv === "development" || nodeEnv === "test") {
 
 const schema = require("./schema");
 const AppService = require("./services/appService");
+const LinkRepository = require("./repository/linkRepository");
 
 const linkRepository = new LinkRepository();
 const appService = new AppService(linkRepository, nanoid);

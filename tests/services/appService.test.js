@@ -1,4 +1,5 @@
 const assert = require("assert");
+const sinon = require("sinon");
 const { FakeLinkRepository, FakeNanoid } = require("../fakers");
 const AppService = require("../../services/appService");
 
@@ -18,6 +19,27 @@ describe("AppService", () => {
 			const response = appService.validateURL(url);
 			assert.strictEqual(false, response);
 		});
+
+		let nanoidStub;
+		const stubNanoidStub = () => {
+			nanoidStub = sinon.stub(fakeLinkRepository, "findByShortId");
+		};
+		const restoreNanoidStub = () => {
+			fakeLinkRepository.findByShortId.restore();
+		};
+		beforeEach("Stub nanoid service", stubNanoidStub);
+		afterEach("Restore nanoid service", restoreNanoidStub);
+
+		it("should throw error, couldn't generate unique id", async () => {
+			nanoidStub.returns("same-id");
+			const res = await appService.getUniquePath().catch((err) => {
+				assert.strictEqual(
+					"Could not generate a unique id. Try again later",
+					err.message
+				);
+			});
+			assert.strictEqual(res, undefined);
+		});
 	});
 
 	describe("getUniquePath", () => {
@@ -30,22 +52,22 @@ describe("AppService", () => {
 			const response = await appService.getUniquePath();
 			assert.strictEqual(6, response.length);
 		});
-
-		it("should throw error, couldn't generate unique id", async () => {});
 	});
 
 	describe("getOriginalUrl", () => {
 		it("should throw error, page not found", async () => {
 			const shortid = "a-long-invalid-url";
-			await appService.getOriginalUrl(shortid).catch((err) => {
+			const res = await appService.getOriginalUrl(shortid).catch((err) => {
 				assert.strictEqual("Page not found", err.message);
 			});
+			assert.strictEqual(res, undefined);
 		});
 		it("should throw error, page not found", async () => {
 			const shortid = "abcdef";
-			await appService.getOriginalUrl(shortid).catch((err) => {
+			const res = await appService.getOriginalUrl(shortid).catch((err) => {
 				assert.strictEqual("Page not found", err.message);
 			});
+			assert.strictEqual(res, undefined);
 		});
 
 		it("should return original url", async () => {
