@@ -1,6 +1,7 @@
 const express = require("express");
 const expressGraphQL = require("express-graphql").graphqlHTTP;
 const dotenv = require("dotenv");
+const nanoid = require("nanoid");
 
 const nodeEnv = process.env.NODE_ENV || "development";
 if (nodeEnv === "development" || nodeEnv === "test") {
@@ -9,6 +10,10 @@ if (nodeEnv === "development" || nodeEnv === "test") {
 
 const schema = require("./schema");
 const AppService = require("./services/appService");
+
+const linkRepository = new LinkRepository();
+const appService = new AppService(linkRepository, nanoid);
+
 require("./db");
 
 const app = express();
@@ -23,7 +28,7 @@ app.use(
 
 app.use(async (req, res, next) => {
 	try {
-		const originalUrl = await AppService.getOriginalUrl(req.url);
+		const originalUrl = await appService.getOriginalUrl(req.url);
 		const path = originalUrl.split("/")[1];
 		res.redirect(path);
 	} catch (error) {
