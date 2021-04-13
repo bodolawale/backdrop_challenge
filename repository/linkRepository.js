@@ -15,6 +15,14 @@ class LinkRepository {
 			},
 		});
 	}
+
+	async findByOriginalUrl(originalUrl) {
+		return Link.findOne({
+			where: {
+				originalUrl,
+			},
+		});
+	}
 }
 
 module.exports = LinkRepository;

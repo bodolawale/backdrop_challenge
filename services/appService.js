@@ -8,6 +8,16 @@ class AppService {
 	async shortenURL(originalUrl, domain) {
 		if (!this.validateURL(originalUrl)) throw new Error("Invalid URL");
 
+		// check id originalUrl already exists
+		const exists = this.linkRepository.findByOriginalUrl(originalUrl);
+		if (exists) {
+			return {
+				shortUrl: `${domain}/${exits.shortid}`,
+				host: domain,
+				path: exists.shortid,
+			}
+		}
+
 		const shortid = await this.getUniquePath();
 
 		const shortUrl = `${domain}/${shortid}`;
