@@ -9,10 +9,10 @@ class AppService {
 		if (!this.validateURL(originalUrl)) throw new Error("Invalid URL");
 
 		// check id originalUrl already exists
-		const exists = this.linkRepository.findByOriginalUrl(originalUrl);
+		const exists = await this.linkRepository.findByOriginalUrl(originalUrl);
 		if (exists) {
 			return {
-				shortUrl: `${domain}/${exits.shortid}`,
+				shortUrl: `${domain}/${exists.shortid}`,
 				host: domain,
 				path: exists.shortid,
 			}
