@@ -1,4 +1,4 @@
-const Link = require("../dto/link");
+const Link = require("../model/link");
 
 class LinkRepository {
 	async create(originalUrl, shortid) {
