@@ -86,13 +86,19 @@ describe("AppService", () => {
 	});
 
 	describe("shortenURL", () => {
+		const originalUrl = "https://www.example.com";
+		const domain = "https://www.app-testing.com";
+		let path = "";
 		it("should return shortened data", async () => {
-			const originalUrl = "https://www.example.com";
-			const domain = "https://www.app-testing.com";
 			const res = await appService.shortenURL(originalUrl, domain);
 			assert.strictEqual(res.host, domain);
 			assert.strictEqual(typeof res.shortUrl, "string");
 			assert.strictEqual(typeof res.path, "string");
+			path = res.path;
+		});
+		it("should return a used path for same originalUrl", async () => {
+			const res = await appService.shortenURL(originalUrl, domain);
+			assert.strictEqual(res.path, path);
 		});
 	});
 });
