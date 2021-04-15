@@ -15,6 +15,7 @@ npm install
 Create a config folder in the root of the application and add these files:
 
 development.env
+
 test.env
 
 The file .env.example contains the necessary keys for the app to run.
