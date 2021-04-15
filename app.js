@@ -1,7 +1,6 @@
+const dotenv = require("dotenv");
 const express = require("express");
 const expressGraphQL = require("express-graphql").graphqlHTTP;
-const dotenv = require("dotenv");
-const nanoid = require("nanoid");
 
 const nodeEnv = process.env.NODE_ENV || "development";
 if (nodeEnv === "development" || nodeEnv === "test") {
@@ -13,7 +12,7 @@ const AppService = require("./services/appService");
 const LinkRepository = require("./repository/linkRepository");
 
 const linkRepository = new LinkRepository();
-const appService = new AppService(linkRepository, nanoid);
+const appService = new AppService(linkRepository);
 
 require("./db");
 

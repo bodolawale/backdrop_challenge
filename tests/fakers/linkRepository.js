@@ -18,6 +18,10 @@ class FakeLinkRepository {
 	async findByShortId(shortid) {
 		return this.links.find((link) => link.shortid === shortid);
 	}
+
+	async findByOriginalUrl(originalUrl) {
+		return this.links.find((link) => link.originalUrl === originalUrl);
+	}
 }
 
 module.exports = FakeLinkRepository;

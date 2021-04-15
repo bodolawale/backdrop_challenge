@@ -1,10 +1,11 @@
-const assert = require("assert");
 const sinon = require("sinon");
-const { FakeLinkRepository, FakeNanoid } = require("../fakers");
+const assert = require("assert");
+const { nanoid } = require("nanoid");
+const { FakeLinkRepository } = require("../fakers");
 const AppService = require("../../services/appService");
 
 const fakeLinkRepository = new FakeLinkRepository();
-const appService = new AppService(fakeLinkRepository, FakeNanoid);
+const appService = new AppService(fakeLinkRepository);
 
 describe("AppService", () => {
 	describe("validateUrl", () => {
@@ -73,7 +74,7 @@ describe("AppService", () => {
 		it("should return original url", async () => {
 			const fakeData = {
 				originalUrl: "https://www.example.com",
-				shortid: FakeNanoid(6),
+				shortid: nanoid(6),
 			};
 			const data = await fakeLinkRepository.create(
 				fakeData.originalUrl,

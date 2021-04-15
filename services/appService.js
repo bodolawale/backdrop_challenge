@@ -1,8 +1,8 @@
+const { nanoid } = require("nanoid");
 class AppService {
 	// Dependency injection for easy testing!
-	constructor(linkRepository, nanoid) {
+	constructor(linkRepository) {
 		this.linkRepository = linkRepository;
-		this.nanoid = nanoid;
 	}
 
 	async shortenURL(originalUrl, domain) {
@@ -15,7 +15,7 @@ class AppService {
 				shortUrl: `${domain}/${exists.shortid}`,
 				host: domain,
 				path: exists.shortid,
-			}
+			};
 		}
 
 		const shortid = await this.getUniquePath();
@@ -31,20 +31,18 @@ class AppService {
 		};
 	}
 
-	async getUniquePath() {
-		let shortid = this.nanoid(6);
-		let exists = null;
-		// Making sure the shortid is not already in the database.
-		for (let i = 0; i < 3; i++) {
-			exists = await this.linkRepository.findByShortId(shortid);
-			if (!exists) return shortid;
-			shortid = this.nanoid(6);
-		}
-		// This most likely won't happen given the scope of the project.
-		if (exists)
+	async getUniquePath(count = 0) {
+		if (count > 3)
 			throw new Error("Could not generate a unique id. Try again later");
 
-		return shortid;
+		let shortid = nanoid(6);
+
+		// Making sure the shortid is not already in the database.
+		const exists = await this.linkRepository.findByShortId(shortid);
+
+		if (!exists) return shortid;
+
+		return this.getUniquePath((count += 1));
 	}
 
 	async getOriginalUrl(shortid) {
